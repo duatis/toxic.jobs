@@ -2,7 +2,7 @@
   "name": "toxic.jobs",
   "version": "1.0.0",
   "description": "Web for toxic jobs recording and classification",
-  "main": "index.js",
+  "main": "index.njs",
   "repository": {
     "type": "git",
     "url": "https://github.com/duatis/toxic.jobs.git"
@@ -22,5 +22,11 @@
   "dependencies": {
     "express": "^4.14.0",
     "mongoose": "^4.5.3"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "grunt": "^1.0.1",
+    "grunt-mocha-test": "^0.12.7",
+    "mocha": "^2.5.3"
   }
 }

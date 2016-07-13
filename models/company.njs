@@ -1,6 +1,6 @@
 /**
  * Created by duatis on 12/07/16.
- * @summary model for entrerprise entity.
+ * @summary model for company entity.
  *
  * @param mongoose reference to mongoose database conection
  */
