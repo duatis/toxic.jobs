@@ -7,7 +7,7 @@ var db = 'mongodb://localhost/toxic_jobs_test';
 var mongoose = require('mongoose').connect(db);
 var Company  = require('../models/company.njs')(mongoose);
 
-describe('Company model test', function() {
+describe('Company model', function() {
     it('save company should add new document to database', function(done) {
         var _company = new Company({name: "company test", description: "Test company for unit tests"}).save(
             function(err, result)
@@ -17,7 +17,6 @@ describe('Company model test', function() {
             }
         );
     });
-
 
     it('companies should have +1 register after a save', function(done) {
         Company.find({}).exec(

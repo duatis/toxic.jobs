@@ -20,7 +20,8 @@ module.exports = function(mongoose)
             zip: Number,
             country: String,
             description: String,
-            web: String
+            web: String,
+            URID: String //Id to accress throug url
         }
     );
 
