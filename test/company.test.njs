@@ -3,16 +3,14 @@
  */
 var chai = require('chai');
 var expect = chai.expect;
-var db = 'mongodb://localhost/toxic_jobs_test';
-var mongoose = require('mongoose').connect(db);
-var Company  = require('../models/company.njs')(mongoose);
+var Company  = new (require('../models/company.njs'))();
 
 describe('Company model', function() {
     it('save company should add new document to database', function(done) {
-        var _company = new Company({name: "company test", description: "Test company for unit tests"}).save(
+        var _company = new Company({name: "company new struct", description: "Test company for unit tests"}).save(
             function(err, result)
             {
-                expect(result.name).to.equals("company test");
+                expect(result.name).to.equals("company new struct");
                 done();
             }
         );

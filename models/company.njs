@@ -4,14 +4,13 @@
  *
  * @param mongoose reference to mongoose database conection
  */
-module.exports = function(mongoose)
-{
-    var Schema = mongoose.Schema, Company;
+var BaseModel = require('./base_model.njs');
 
-    /**
-     * @var schema for the mongodb document
-     */
-    var schema = new Schema(
+class Company extends BaseModel
+{
+    constructor()
+    {
+        var schema =
         {
             name: String,
             address: String,
@@ -22,14 +21,10 @@ module.exports = function(mongoose)
             description: String,
             web: String,
             URID: String //Id to accress throug url
-        }
-    );
+        };
+        super(schema);
+       return this.model;
+    }
+}
 
-
-    /**
-     * @var creates the mongoose model
-     */
-    Company = mongoose.model( 'Company', schema );
-
-    return Company;
-};
+module.exports = Company;
