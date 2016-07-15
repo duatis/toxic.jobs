@@ -3,11 +3,11 @@
  */
 var chai = require('chai');
 var expect = chai.expect;
-var Company  = new (require('../models/company.njs'))();
+var Company = require('../models/company.njs');
 
 describe('Company model', function() {
     it('save company should add new document to database', function(done) {
-        var _company = new Company({name: "company new struct", description: "Test company for unit tests"}).save(
+        new Company({name: "company new struct", description: "Test company for unit tests"}).save(
             function(err, result)
             {
                 expect(result.name).to.equals("company new struct");

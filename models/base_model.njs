@@ -1,13 +1,22 @@
 /**
  * Created by duatis on 14/07/16.
  */
-
-class BaseModel{
+var db = require('../library/database.njs');
+class BaseModel
+{
+    /**
+     *
+     * @param schema structure for the mongo document based on mongoose
+     */
     constructor( schema )
     {
-        this.db = require('../library/database.njs');
-        var _schema = new this.db.Schema(schema);
-        this.model = this.db.model( this.constructor.name, _schema );
+        var _schema = new db.Schema(schema);                       //Create schema
+        this.model = db.model( this.constructor.name, _schema );   //Create model
+    }
+
+    static get Schema()
+    {
+        return db.Schema;
     }
 }
 

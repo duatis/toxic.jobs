@@ -1,8 +1,7 @@
 /**
  * Created by duatis on 12/07/16.
  * @summary model for company entity.
- *
- * @param mongoose reference to mongoose database conection
+ * @see BaseModel
  */
 var BaseModel = require('./base_model.njs');
 
@@ -27,4 +26,4 @@ class Company extends BaseModel
     }
 }
 
-module.exports = Company;
+module.exports = new Company();
