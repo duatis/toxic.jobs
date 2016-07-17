@@ -26,13 +26,40 @@ describe('Comment model', function() {
                     .save(
                         function(err, data)
                         {
-                            var _comment = data;
-                            expect(false).to.equal(true);
-                            done();
+                            Comment.findOne(data).populate("_company").exec(
+                                function(err, data)
+                                {
+                                    expect(data._company._id.toString()).to.equal(company._id.toString());
+                                    done();
+                                }
+                            );
+
                         }
                     );
             }
         );
+    });
+
+    it('comments should have -1 register after a remove', function(done) {
+        Comment.find({}).exec(
+            function(err, results1)
+            {
+                var n = results1.length;
+                Comment.remove({_id: results1[0]._id},
+                    function(err)
+                    {
+                        Comment.find({}).exec(
+                            function(err, results2)
+                            {
+                                expect(results2.length).to.equal(n-1);
+                                done();
+                            }
+                        );
+                    }
+                );
+            }
+        );
+
     });
 
 });

@@ -1,15 +1,14 @@
 /**
  * Created by duatis on 13/07/16.
  */
-module.exports = function(Company)
+var BaseController = require('./base_controller.njs');
+
+class CompanyController extends BaseController
 {
-    //Instance
-    var self = {};
-
-    self.index = function(fn)
+    constructor()
     {
-        Company.find({}).exec(fn);
+        super();
     }
-
-    return self;
 }
+
+module.exports = CompanyController;
