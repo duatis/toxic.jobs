@@ -33,6 +33,7 @@ class BaseController
      */
     find(query, fn)
     {
+        if(fn == undefined) return this[model].find(query);
         return this[model].find(query).exec(fn);
     }
 
@@ -87,6 +88,16 @@ class BaseController
     remove(query, fn)
     {
         this[model].remove(query,fn);
+    }
+
+    modify(query, data, fn )
+    {
+        this[model].update(query, data, {multi:true}, fn);
+    }
+
+    modifyOne(query, data, fn )
+    {
+        this[model].update(query, data, {multi:false}, fn);
     }
 }
 

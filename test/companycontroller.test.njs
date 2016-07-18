@@ -16,6 +16,8 @@ describe("Company controller", function()
             expect(controller).to.respondTo('create');
             expect(controller).to.respondTo('count');
             expect(controller).to.respondTo('remove');
+            expect(controller).to.respondTo('modify');
+            expect(controller).to.respondTo('modifyOne');
             done();
         }
     );
@@ -74,6 +76,38 @@ describe("Company controller", function()
                     });
                 });
             })
+        });
+    });
+
+    it("should update several elements from collection", (done) =>{
+        var doc = { name: "cod " + (new Date()).getTime() };
+        wrk.create(doc, (err,data) =>
+        {
+            wrk.create(doc, (err,data) =>
+            {
+               wrk.modify(doc, {name: doc.name + "*"}, (err, data) =>{
+                   wrk.count({name: doc.name + "*"}, (err,n) =>{
+                        expect(n).to.equal(2);
+                       done();
+                   });
+               });
+            });
+        });
+    });
+
+    it("should update only one element from collection", (done) =>{
+        var doc = { name: "cod " + (new Date()).getTime() };
+        wrk.create(doc, (err,data) =>
+        {
+            wrk.create(doc, (err,data) =>
+            {
+                wrk.modifyOne(doc, {name: doc.name + "*"}, (err, data) =>{
+                    wrk.count({name: doc.name + "*"}, (err,n) =>{
+                        expect(n).to.equal(1);
+                        done();
+                    });
+                });
+            });
         });
     });
 });
