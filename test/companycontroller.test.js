@@ -3,8 +3,12 @@
  */
 var chai = require('chai');
 var expect = chai.expect;
-var controller = require('../controllers/companyController.njs');
+var controller = require('../controllers/companyController');
 var wrk = new controller();
+
+var test_description = "01234567890123456789";
+var doc = { name: (new Date()).getTime().toString(), description:test_description };
+
 describe("Company controller", function()
 {
     it("should implement all controller methods",
@@ -50,7 +54,6 @@ describe("Company controller", function()
     });
 
     it("should create an save new document", (done) =>{
-            var doc = { name: "cod " + (new Date()).getTime() };
             wrk.count({},(err, data) => {
                 var nRegs = data;
                 wrk.create(doc, (err,data) => {
@@ -65,7 +68,6 @@ describe("Company controller", function()
     );
 
     it("should remove documents from collection", (done) =>{
-        var doc = { name: "cod " + (new Date()).getTime() };
         wrk.count({},(err, data) => {
             var nRegs = data;
             wrk.create(doc, (err,data) => {
@@ -80,12 +82,11 @@ describe("Company controller", function()
     });
 
     it("should update several elements from collection", (done) =>{
-        var doc = { name: "cod " + (new Date()).getTime() };
         wrk.create(doc, (err,data) =>
         {
             wrk.create(doc, (err,data) =>
             {
-               wrk.modify(doc, {name: doc.name + "*"}, (err, data) =>{
+               wrk.modify({name:doc.name}, {name: doc.name + "*"}, (err, data) =>{
                    wrk.count({name: doc.name + "*"}, (err,n) =>{
                         expect(n).to.equal(2);
                        done();
@@ -96,14 +97,47 @@ describe("Company controller", function()
     });
 
     it("should update only one element from collection", (done) =>{
-        var doc = { name: "cod " + (new Date()).getTime() };
         wrk.create(doc, (err,data) =>
         {
             wrk.create(doc, (err,data) =>
             {
-                wrk.modifyOne(doc, {name: doc.name + "*"}, (err, data) =>{
-                    wrk.count({name: doc.name + "*"}, (err,n) =>{
+                wrk.modifyOne(doc, {name: doc.name + "+"}, (err, data) =>{
+                    wrk.count({name: doc.name + "+"}, (err,n) =>{
                         expect(n).to.equal(1);
+                        done();
+                    });
+                });
+            });
+        });
+    });
+
+    it("company without name should return error", (done) =>{
+        wrk.create({description: test_description}, (err,data) =>{
+            expect(err).to.be.array;
+            done();
+        });
+    });
+
+    it("company with too short description should return error", (done) =>{
+        wrk.create({name:"test company name"}, (err,data) =>{
+            expect(err).to.be.array;
+            done();
+        });
+    });
+
+    it("create should save URID to access company", (done) =>{
+        wrk.create({name:"test company name" + (new Date()).getTime().toString(),description:test_description}, (err,data) =>{
+            expect(data.URID).to.equal(data.name.slug());
+            done();
+        });
+    });
+
+    it("shouldn't save companies with the same URID", (done) =>{
+        wrk.create({name:doc.name,description:test_description}, (err,data) =>{
+            wrk.create({name:doc.name,description:test_description}, (err,data) => {
+                wrk.create({name:doc.name,description:test_description}, (err,data) => {
+                    wrk.count({URID:data.URID}, (err,data)=>{
+                        expect(data).to.equal(1);
                         done();
                     });
                 });

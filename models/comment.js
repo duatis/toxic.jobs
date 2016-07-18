@@ -3,7 +3,7 @@
  * @summary model for comment entity.
  * @see BaseModel
  */
-var BaseModel = require('./base_model.njs');
+var BaseModel = require('./base_model.js');
 class Comment extends BaseModel
 {
     constructor()

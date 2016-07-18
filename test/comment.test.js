@@ -3,8 +3,8 @@
  */
 var chai = require('chai');
 var expect = chai.expect;
-var Comment = require('../models/comment.njs');
-var Company = require('../models/company.njs');
+var Comment = require('../models/comment.js');
+var Company = require('../models/company.js');
 
 describe('Comment model', function() {
     it('save comment should add new document to database', function(done) {

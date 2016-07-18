@@ -4,7 +4,7 @@ var express = require('express'),
     cookieParser = require('cookie-parser'),
     bodyParser = require('body-parser'),
     routes = require('./routes/index'),
-    api = require('./routes/api.njs'),
+    api = require('./routes/api.js'),
     app = express();
 
 app.use(logger('dev'));

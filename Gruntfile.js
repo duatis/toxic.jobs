@@ -15,7 +15,7 @@ module.exports = function(grunt) {
                     quiet: false,
                     clearRequireCache: false
                 },
-                src: ['test/*.test.njs']
+                src: ['test/*.test.js']
             }
         }
     });

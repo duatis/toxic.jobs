@@ -12,7 +12,7 @@ class BaseController
     constructor()
     {
         var modelName  = this.constructor.name.replace("Controller","");
-        this[model] = require("../models/"+modelName+".njs");
+        this[model] = require("../models/"+modelName);
     }
 
     /**

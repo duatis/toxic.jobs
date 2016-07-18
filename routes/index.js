@@ -1,6 +1,6 @@
 var express = require('express'),
     router = express(),
-    company    = new (require('../models/company.njs'))();
+    company    = new (require('../models/company.js'))();
 
 /* GET home page. */
 router.get('/', function(req, res, next) {

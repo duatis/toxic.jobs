@@ -3,7 +3,7 @@
  */
 var express = require('express'),
     router = express(),
-    company    = new (require('../controllers/companyController.njs'));
+    company    = new (require('../controllers/companyController.js'));
 
 /* GET home page. */
 router.get('/companies', function(req, res, next) {

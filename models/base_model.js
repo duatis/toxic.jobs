@@ -1,7 +1,7 @@
 /**
  * Created by duatis on 14/07/16.
  */
-var db = require('../library/database.njs');
+var db = require('../library/database.js');
 class BaseModel
 {
     /**
