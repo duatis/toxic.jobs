@@ -7,6 +7,19 @@ var Comment = require('../models/comment.js');
 var Company = require('../models/company.js');
 
 describe('Comment model', function() {
+
+
+    before(function() {
+
+        Comment.remove({});
+        Company.remove({}, ()=> {
+            new Company({
+                name: "company for comment test",
+                description: "a simple company to perform comment test"
+            }).save();
+        });
+    });
+
     it('save comment should add new document to database', function(done) {
         new Comment({text: "dummy text"}).save(
             function(err, data)
@@ -48,6 +61,7 @@ describe('Comment model', function() {
                 Comment.remove({_id: results1[0]._id},
                     function(err)
                     {
+                        if(err != null) expect(true).to.be.false;
                         Comment.find({}).exec(
                             function(err, results2)
                             {

@@ -6,6 +6,11 @@ var expect = chai.expect;
 var Company = require('../models/company.js');
 
 describe('Company model', function() {
+
+    before(()=>{
+        Company.remove({});
+    });
+
     it('save company should add new document to database', function(done) {
         new Company({name: "company new struct", description: "Test company for unit tests"}).save(
             function(err, result)
@@ -22,12 +27,12 @@ describe('Company model', function() {
             {
                 var n = results1.length;
                 var _company = new Company({}).save(
-                    function(err, result)
+                    function(err)
                     {
                         Company.find({}).exec(
-                            function(err, results2)
+                            function(err, result)
                             {
-                                expect(results2.length).to.equal(n+1);
+                                expect(result.length).to.equal(n+1);
                                 done();
                             }
                         );

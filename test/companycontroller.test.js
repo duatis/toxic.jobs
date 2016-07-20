@@ -11,6 +11,9 @@ var doc = { name: (new Date()).getTime().toString(), description:test_descriptio
 
 describe("Company controller", function()
 {
+    before(()=>{
+        wrk.remove({});
+    });
     it("should implement all controller methods",
         function(done)
         {
@@ -70,8 +73,9 @@ describe("Company controller", function()
     it("should remove documents from collection", (done) =>{
         wrk.count({},(err, data) => {
             var nRegs = data;
-            wrk.create(doc, (err,data) => {
-                wrk.remove({name: doc.name}, (err,data) => {
+            wrk.create(doc, (err) => {
+                wrk.remove({name: doc.name}, (err) => {
+                    if(err != null) expect(true).to.be.false;
                     wrk.count({name: doc.name}, (err, data) => {
                         expect(data).to.equal(0);
                         done();
@@ -82,13 +86,17 @@ describe("Company controller", function()
     });
 
     it("should update several elements from collection", (done) =>{
-        wrk.create(doc, (err,data) =>
+        wrk.create(doc, (err) =>
         {
-            wrk.create(doc, (err,data) =>
+            if(err != null) expect(true).to.be.false;
+            wrk.create(doc, (err) =>
             {
-               wrk.modify({name:doc.name}, {name: doc.name + "*"}, (err, data) =>{
-                   wrk.count({name: doc.name + "*"}, (err,n) =>{
-                        expect(n).to.equal(2);
+                if(err != null) expect(true).to.be.false;
+                wrk.modify({name:doc.name}, {name: doc.name + "*"}, (err, data) =>{
+                    if(err != null) expect(true).to.be.false;
+                    wrk.count({name: doc.name + "*"}, (err,n) =>{
+                       if(err != null) expect(true).to.be.false;
+                       expect(n).to.equal(2);
                        done();
                    });
                });
@@ -97,9 +105,9 @@ describe("Company controller", function()
     });
 
     it("should update only one element from collection", (done) =>{
-        wrk.create(doc, (err,data) =>
+        wrk.create(doc, (err) =>
         {
-            wrk.create(doc, (err,data) =>
+            wrk.create(doc, (err) =>
             {
                 wrk.modifyOne(doc, {name: doc.name + "+"}, (err, data) =>{
                     wrk.count({name: doc.name + "+"}, (err,n) =>{
@@ -111,32 +119,43 @@ describe("Company controller", function()
         });
     });
 
-    it("company without name should return error", (done) =>{
+    it("company without name should return error (code 1001)", (done) =>{
         wrk.create({description: test_description}, (err,data) =>{
-            expect(err).to.be.array;
+            expect(err[0].code).to.equal(1001);
             done();
         });
     });
 
-    it("company with too short description should return error", (done) =>{
+    it("company with too short description should return error (code 1002)", (done) =>{
         wrk.create({name:"test company name"}, (err,data) =>{
-            expect(err).to.be.array;
+            expect(err[0].code).to.equal(1002);
+            done();
+        });
+    });
+
+    it("company with too invalid email format should return error (code 1003)", (done) =>{
+        wrk.create({name:"test company name",description: test_description, email:"duatis-gmail.com"}, (err,data) =>{
+            expect(err[0].code).to.equal(1003);
             done();
         });
     });
 
     it("create should save URID to access company", (done) =>{
-        wrk.create({name:"test company name" + (new Date()).getTime().toString(),description:test_description}, (err,data) =>{
+        wrk.create({name:"URID test",description:test_description}, (err,data) =>{
             expect(data.URID).to.equal(data.name.slug());
             done();
         });
     });
 
     it("shouldn't save companies with the same URID", (done) =>{
-        wrk.create({name:doc.name,description:test_description}, (err,data) =>{
-            wrk.create({name:doc.name,description:test_description}, (err,data) => {
+        wrk.create({name:doc.name,description:test_description}, (err) =>{
+            if(err != null) expect(true).to.be.false;
+            wrk.create({name:doc.name,description:test_description}, (err) => {
+                if(err != null) expect(true).to.be.false;
                 wrk.create({name:doc.name,description:test_description}, (err,data) => {
+                    if(err != null) expect(true).to.be.false;
                     wrk.count({URID:data.URID}, (err,data)=>{
+                        if(err != null) expect(true).to.be.false;
                         expect(data).to.equal(1);
                         done();
                     });

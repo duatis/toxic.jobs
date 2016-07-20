@@ -19,7 +19,8 @@ class Company extends BaseModel
             country: String,
             description: String,
             web: String,
-            URID: String //Id to accress throug url
+            email:String,
+            URID: String //Id to accress through url
         };
         super(schema);
        return this.model;

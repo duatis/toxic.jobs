@@ -16,13 +16,15 @@ class CompanyController extends BaseController
      * @param data
      * @returns {Array}
      */
-    validateData(data)
+    static validateData(data)
     {
         var errors = [];
         if( data.name == undefined || data.name == null )
             errors.push({code: 1001, message:"Company must provide a name"});
         if(data.description == undefined || data.description.length < 20)
             errors.push({code: 1002, message:"Company must a description of minimum 20 characters"});
+        if(data.email != undefined && !data.email.isValidEmail())
+            errors.push({code: 1003, message: "Email format not valid"});
         return errors;
     }
 
@@ -33,8 +35,7 @@ class CompanyController extends BaseController
      */
     create(data, fn)
     {
-        var errors = this.validateData(data);
-
+        var errors = CompanyController.validateData(data);
         if (errors.length > 0) fn(errors, null); //if errors execute callback with generated errors
         else
         {

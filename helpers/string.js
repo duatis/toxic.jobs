@@ -6,7 +6,6 @@ String.prototype.slug = function()
     var str = this;
     str = str.replace(/^\s+|\s+$/g, ''); // trim
     str = str.toLowerCase();
-
     // remove accents, swap ñ for n, etc
     var from = "ãàáäâẽèéëêìíïîõòóöôùúüûñç·/_,:;";
     var to   = "aaaaaeeeeeiiiiooooouuuunc------";
@@ -19,4 +18,11 @@ String.prototype.slug = function()
         .replace(/-+/g, '-'); // collapse dashes
 
     return str;
-}
+};
+
+String.prototype.isValidEmail = function()
+{
+    var str = this;
+    var re = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+    return re.test(str);
+};
