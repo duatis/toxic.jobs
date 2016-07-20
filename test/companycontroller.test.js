@@ -5,9 +5,9 @@ var chai = require('chai');
 var expect = chai.expect;
 var controller = require('../controllers/companyController');
 var wrk = new controller();
-
-var test_description = "01234567890123456789";
-var doc = { name: (new Date()).getTime().toString(), description:test_description };
+var faker = require('faker');
+var test_description = faker.lorem.paragraph();
+var doc = { name: faker.name.findName(), description:test_description };
 
 describe("Company controller", function()
 {

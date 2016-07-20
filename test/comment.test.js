@@ -5,6 +5,7 @@ var chai = require('chai');
 var expect = chai.expect;
 var Comment = require('../models/comment.js');
 var Company = require('../models/company.js');
+var faker = require('faker');
 
 describe('Comment model', function() {
 
@@ -21,10 +22,11 @@ describe('Comment model', function() {
     });
 
     it('save comment should add new document to database', function(done) {
-        new Comment({text: "dummy text"}).save(
+        var fake_text = faker.lorem.paragraph();
+        new Comment({text:fake_text }).save(
             function(err, data)
             {
-                expect(data.text).to.equals("dummy text");
+                expect(data.text).to.equals(fake_text);
                 done();
             }
         );
@@ -35,7 +37,8 @@ describe('Comment model', function() {
             function(err, data)
             {
                 var company = data;
-                new Comment({text: company.name + " comment ", _company: company._id })
+                var fake_name = faker.name.findName();
+                new Comment({text: fake_name, _company: company._id })
                     .save(
                         function(err, data)
                         {

@@ -7,13 +7,14 @@ var chaiHttp = require('chai-http');
 chai.use(chaiHttp);
 var app = require('../app');
 var request = chai.request(app);
-var test_description = "01234567890123456789";
+var faker = require('faker')
+var test_description = faker.lorem.paragraph();
 
 describe("API", function(){
 
     var company_id,
         company_URID,
-        comment_text = (new Date()).getTime();
+        comment_text = faker.lorem.paragraph();
 
     before((done)=>{
 
