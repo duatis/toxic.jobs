@@ -13,8 +13,7 @@ router.get('/companies', function(req, res) {
 });
 
 router.get('/company/:URID', function(req, res) {
-    company.find({URID: req.params.URID}).
-    exec((err,data) =>{
+    company.findOne({URID: req.params.URID},(err,data) =>{
         if(err != null) res.status(500).end(err);
         res.json(data);
     });

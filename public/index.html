@@ -1,30 +1,30 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" ng-app="toxicJobs">
 <head>
     <meta charset="UTF-8">
     <title>Toxic jobs - test -</title>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
-    <script>
-        var companyData = function(urid)
-        {
-            $.get('api/company/' + urid, function(data){
-                $('#data').text( JSON.stringify(data));
-            } );
-        }
-       $(function() {
-           $.get('api/companies', function (data) {
-               for (company in data) {
-                   (function (_urid) {
-                       $('#data').append($('<div>').html(data[company].name).on('click', function () {
-                           companyData(_urid);
-                       }));
-                   })(data[company].URID);
-               }
-           });
-       });
-    </script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.min.js"></script>
+    <script type="text/javascript" src="/js/index.js"></script>
 </head>
 <body>
+<div ng-controller="IndexController">
+    <div  ng-show="company">
+        <strong>name</strong> {{company.name}}<br>
+        <strong>description</strong><br> {{company.description}}<br>
+        <strong>email</strong> {{company.email}}<br>
+    </div>
+    <ul ng-show="company.comments">
+        <li ng-repeat="_comment in company.comments">
+            {{_comment.text}}
+        </li>
+    </ul>
+    <ul>
+        <li ng-repeat="_company in companies">
+            <a ng-click="getCompany(_company.URID)">{{_company.name}}</a>
+        </li>
+    </ul>
+</div>
 <pre id="data">
 
 </pre>
