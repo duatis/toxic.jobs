@@ -14,7 +14,7 @@ describe("Company controller", function()
     before(()=>{
         wrk.remove({});
     });
-    it("should implement all controller methods",
+    it("should implement all controller's methods",
         function(done)
         {
             expect(controller).to.respondTo('find');
@@ -37,7 +37,7 @@ describe("Company controller", function()
         });
     });
 
-    it("find should return an array", function(done){
+    it("find should return several companies", function(done){
         wrk.find({name: {$ne:null}}, (err, data) =>{
             expect(data).to.be.an('Array');
             done();
@@ -46,7 +46,7 @@ describe("Company controller", function()
 
     it("should save a company to the database",function(done){
         wrk.findOne({name: {$ne:null}},(err,data)=>{
-                var newName = data.name + "*";
+                var newName = faker.name.findName();
                 data.name = newName;
                  wrk.save(data, (err, data)=>{
                      expect(data.name).to.equal(newName);

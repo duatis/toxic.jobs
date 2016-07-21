@@ -44,10 +44,16 @@ router.post('/company', function(req, res) {
 });
 
 router.post('/company/:URID/comment', function(req, res) {
-    comment.create(req.body, (err, data)=>{
+    company.findOne({URID: req.params.URID}, (err,data) =>{
         if(err != null) res.status(500).send(err);
-        else
-            res.json(data);
+        else {
+            req.body._company = data._id;
+            comment.create(req.body, (err, data)=>{
+                if(err != null) res.status(500).send(err);
+                else
+                    res.json(data);
+            } );
+        }
     } );
 });
 

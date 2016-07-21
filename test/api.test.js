@@ -25,11 +25,11 @@ describe("API", function(){
             company_URID =  res.body.URID;
 
             request.post('/api/company/' + res.body.URID + '/comment').
-            send({text: comment_text, _company: company_id}).
+            send({text: comment_text}).
             end((err,data) =>{
                 if(err != null)console.log(err);
                 request.post('/api/company/' + res.body.URID + '/comment').
-                send({text: comment_text, _company: company_id}).
+                send({text: comment_text}).
                 end((err,data) =>{
                     if(err != null)console.log(err);
                     done();
@@ -100,4 +100,17 @@ describe("API", function(){
             done();
         });
     } );
+
+    it("post /commpany/:URID/comments should save new comment for the company", (done) =>{
+        var _comment = {text: faker.lorem.paragraph()};
+        request.post('/api/company/' + company_URID + '/comment').
+        send(_comment).
+        end((err, res) =>{
+            request.get('/api/company/' + company_URID + '/comments').
+            end((err,res)=>{
+                expect(res.body.length).equal(3);
+                done();
+            });
+        });
+    });
 });

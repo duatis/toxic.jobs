@@ -1,12 +1,11 @@
 var express = require('express'),
     router = express(),
-    company    = new (require('../models/company.js'))();
+    path = require('path'),
+    company    = new (require('../controllers/companyController'))();
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  company.find({}).exec(function(err,data){
-    res.send(data);
-  });
+  res.sendfile(('./public/index.html'));
 });
 
 module.exports = router;

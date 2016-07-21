@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Toxic jobs - test -</title>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <script>
+        var companyData = function(urid)
+        {
+            $.get('api/company/' + urid, function(data){
+                $('#data').text( JSON.stringify(data));
+            } );
+        }
+        $.get('api/companies', function(data){
+            for( company in data )
+            {
+                (function(_urid)
+                {
+                    $('#data').append($('<div>').html(data[company].name).on('click', function(){ companyData(_urid); }));
+                })(data[company].URID);
+            }
+        });
+    </script>
+</head>
+<body>
+<pre id="data">
+
+</pre>
+</body>
+</html>
