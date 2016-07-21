@@ -11,15 +11,17 @@
                 $('#data').text( JSON.stringify(data));
             } );
         }
-        $.get('api/companies', function(data){
-            for( company in data )
-            {
-                (function(_urid)
-                {
-                    $('#data').append($('<div>').html(data[company].name).on('click', function(){ companyData(_urid); }));
-                })(data[company].URID);
-            }
-        });
+       $(function() {
+           $.get('api/companies', function (data) {
+               for (company in data) {
+                   (function (_urid) {
+                       $('#data').append($('<div>').html(data[company].name).on('click', function () {
+                           companyData(_urid);
+                       }));
+                   })(data[company].URID);
+               }
+           });
+       });
     </script>
 </head>
 <body>
