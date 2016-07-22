@@ -1,12 +1,15 @@
 var express = require('express'),
-    path = require('path'),
-    logger = require('morgan'),
-    cookieParser = require('cookie-parser'),
-    bodyParser = require('body-parser'),
-    routes = require('./routes/index'),
-    api = require('./routes/api.js'),
-    index = require('./routes/index.js'),
-    app = express();
+path = require('path'),
+logger = require('morgan'),
+cookieParser = require('cookie-parser'),
+bodyParser = require('body-parser'),
+routes = require('./routes/index'),
+api = require('./routes/api.js'),
+index = require('./routes/index.js'),
+app = express(),
+passport = require('passport'),
+LocalStrategy = require('passport-local').Strategy;
+
 
 app.use(logger('dev'));
 app.use(bodyParser.json());
@@ -15,6 +18,20 @@ app.use(cookieParser());
 app.use('/api', api);
 app.use('/', index);
 app.use(express.static( './public'));
+app.use(require('express-session')({
+    secret: 'keyboard cat',
+    resave: false,
+    saveUninitialized: false
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+
+//config passport
+var Account = require('./models/account');
+passport.use(new LocalStrategy(Account.authenticate()));
+passport.serializeUser(Account.serializeUser());
+passport.deserializeUser(Account.deserializeUser());
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

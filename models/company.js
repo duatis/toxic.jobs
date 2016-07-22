@@ -3,7 +3,7 @@
  * @summary model for company entity.
  * @see BaseModel
  */
-var BaseModel = require('./base_model.js');
+var BaseModel = require('./base_model');
 
 class Company extends BaseModel
 {
