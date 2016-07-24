@@ -27,10 +27,11 @@ describe('Account', function() {
     it('find a user by username', function(done) {
         Account.findOne({ username: username }, function(err, account) {
             expect(account.username).to.eql(username);
-            console.log("   username: ", account.username);
             done();
         });
     });
+
+
 
    afterEach(function(done) {
         Account.remove({}, function() {

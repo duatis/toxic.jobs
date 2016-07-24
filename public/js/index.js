@@ -18,24 +18,3 @@ var myApp = angular.module('toxicJobs',[]);myApp.controller('IndexController', [
     }
 
 }]);
-/*
-var companyData = function(urid)
-{
-    $.get('api/company/' + urid, function(data){
-        $('#data').text( JSON.stringify(data));
-        $.get('api/company/' + urid + '/comments', function(data){
-            $('#data').append( JSON.stringify(data));
-        } );
-    } );
-}
-$(function() {
-    $.get('api/companies', function (data) {
-        for (company in data) {
-            (function (_urid) {
-                $('#data').append($('<div>').html(data[company].name).on('click', function () {
-                    companyData(_urid);
-                }));
-            })(data[company].URID);
-        }
-    });
-});*/

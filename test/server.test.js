@@ -114,3 +114,54 @@ describe("API", function(){
         });
     });
 });
+
+
+var Account = require('../models/account.js');
+var faker = require('faker');
+
+var username = faker.name.findName();
+var password = faker.internet.password();
+
+
+describe("Autentication API", function(){
+    before((done) =>{
+        var account = new Account({
+            username: username
+        });
+
+        Account.register(account,password,function(error, account) {
+            if (error) console.log('error' + error.message);
+            else console.log('no error');
+            done();
+        });
+    });
+
+    it("respond to post /login", (done)=>{
+        request.post('/account/login').
+        end((err,res)=>{
+            expect(res).to.not.have.status(404);
+            done();
+        });
+    } );
+
+    it("correct login should return logged user", (done)=>{
+        request.post('/account/login').
+        send({username: username, password: password}).
+        end((err,res)=>{
+            expect(res).to.not.have.status(401);
+            expect(res).to.be.json;
+            expect(res.body.username).to.equal(username);
+            done();
+        });
+    } );
+
+    it("correct login should return 401 status", (done)=>{
+        request.post('/account/login').
+        send({username: username, password: "wrong pass"}).
+        end((err,res)=>{
+            expect(res).to.have.status(401);
+            done();
+        });
+    } );
+
+});
