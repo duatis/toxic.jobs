@@ -1,32 +1,41 @@
 var express = require('express'),
-path = require('path'),
-logger = require('morgan'),
-cookieParser = require('cookie-parser'),
-bodyParser = require('body-parser'),
-routes = require('./routes/index'),
-api = require('./routes/api.js'),
-index = require('./routes/index.js'),
-account = require('./routes/account.js'),
-app = express();
-
-
+    path = require('path'),
+    logger = require('morgan'),
+    cookieParser = require('cookie-parser'),
+    bodyParser = require('body-parser'),
+    routes = require('./routes/index'),
+    api = require('./routes/api.js'),
+    index = require('./routes/index.js'),
+    account = require('./routes/account.js'),
+    passport = require('passport'),
+    LocalStrategy = require('passport-local').Strategy,
+    app = express(),
+    Account = require('./models/account');
 
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(express.static( './public'));
+app.use(require('express-session')({
+    secret: 'toxic jobs',
+    resave: false,
+    saveUninitialized: false,
+    cookie: { secure: false }
+}));
+//config passport
+app.use(passport.initialize());
+app.use(passport.session());
+
+
+
 app.use('/api', api);
 app.use('/account', account);
 app.use('/', index);
-app.use(express.static( './public'));
-app.use(require('express-session')({
-    secret: 'keyboard cat',
-    resave: false,
-    saveUninitialized: false
-}));
 
-
-
+passport.use(new LocalStrategy(Account.authenticate()));
+passport.serializeUser(Account.serializeUser());
+passport.deserializeUser(Account.deserializeUser());
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

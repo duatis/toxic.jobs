@@ -144,6 +144,37 @@ describe("Autentication API", function(){
         });
     } );
 
+    it("respond to post /", (done)=>{
+        request.post('/account').
+        send({username: faker.name.findName(), password: password}).
+        end((err,res)=>{
+            expect(res).to.not.have.status(500);
+            done();
+        });
+    } );
+
+
+    it("don't allow duplicate username", (done)=>{
+        request.post('/account').
+        send({username: username, password: password}).
+        end((err,res)=>{
+            expect(res).to.have.status(500);
+            done();
+        });
+    } );
+
+
+
+    it("wrong login should return 401 status", (done)=>{
+        request.post('/account/login').
+        send({username: username, password: "wrong pass"}).
+        end((err,res)=>{
+            expect(res).to.have.status(401);
+            done();
+        });
+    } );
+
+
     it("correct login should return logged user", (done)=>{
         request.post('/account/login').
         send({username: username, password: password}).
@@ -155,13 +186,13 @@ describe("Autentication API", function(){
         });
     } );
 
-    it("correct login should return 401 status", (done)=>{
-        request.post('/account/login').
-        send({username: username, password: "wrong pass"}).
-        end((err,res)=>{
-            expect(res).to.have.status(401);
-            done();
+    it("return true if user is logged in", (done) =>{
+            request.get('/account/loggedin').
+            end((err,res) =>{
+                console.log(res.body.result);
+                expect(res.body.result).to.be.ok;
+                done();
+            });
         });
-    } );
 
 });
