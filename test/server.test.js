@@ -38,7 +38,6 @@ describe("API", function(){
             });
 
         });
-
     });
 
     it("should respond to get /companies", (done)=>{
@@ -118,12 +117,14 @@ describe("API", function(){
 
 var Account = require('../models/account.js');
 var faker = require('faker');
-
 var username = faker.name.findName();
 var password = faker.internet.password();
 
 
-describe("Autentication API", function(){
+describe("Autentication API", function()
+{
+    var cookies;
+
     before((done) =>{
         var account = new Account({
             username: username
@@ -174,7 +175,15 @@ describe("Autentication API", function(){
         });
     } );
 
+    it("/loggedin should return false if user is not authenticated", (done) =>{
+        var req = request.get('/account/loggedin');
+        req.cookies = cookies;
+        req.end((err, res) =>{
+            expect(res.body.result).not.to.be.ok;
+            done();
+        });
 
+    } );
 
     it("correct login should return logged user", (done)=>{
         request.post('/account/login').
@@ -183,10 +192,18 @@ describe("Autentication API", function(){
             expect(res).to.not.have.status(401);
             expect(res).to.be.json;
             expect(res.body.username).to.equal(username);
+            cookies = res.headers['set-cookie'].pop().split(';')[0]; //save the cookie for further tests
             done();
         });
     } );
 
-    it("/loggedin can not be tested due to session issues");
+    it("/loggedin should return true if user is authenticated", (done) =>{
+        var req = request.get('/account/loggedin');
+        req.cookies = cookies; //set cookies saved before
+        req.end((err, res) =>{
+            expect(res.body.result).to.be.ok;
+            done();
+        });
+    } );
 
 });
