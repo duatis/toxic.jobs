@@ -8,18 +8,21 @@ var express = require('express'),
 
 router.post('/login',  passport.authenticate('local'),
     (req, res)=> {
-        req.session.save(()=>res.json(req.user));
-
+        req.session.save((err)=>{
+            if(err)return res.status(500).send(err);
+            res.json( req.user )
+        });
     });
+router.get('/logout', function(req, res){
+    req.logout();
+    res.end();
+});
 
 router.post('/',
     (req, res)=> {
         Account.register({username:req.body.username}, req.body.password, (err, response) =>{
-            if(err)res.status(500).send(err);
-            else
-            {
-                res.json(response);
-            }
+            if(err)return res.status(500).send(err);
+            res.json(response);
         });
     });
 
@@ -30,10 +33,8 @@ router.get('/loggedin', isLoggedIn, (req, res) =>{
 
 function isLoggedIn(req, res, next) {
     // if user is authenticated in the session, carry on
-
-    if (req.isAuthenticated)
+    if (req.isAuthenticated())
         return next();
-
     // if they aren't redirect them to the home page
     res.json({result: false});
 }

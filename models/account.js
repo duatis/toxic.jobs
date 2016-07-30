@@ -4,6 +4,8 @@
 var db = require('../library/database.js');
 var passportLocalMongoose = require('passport-local-mongoose');
 
+
+
 var schema = {
     username: String,
     password: String,

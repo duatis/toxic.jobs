@@ -19,15 +19,13 @@ app.use(cookieParser());
 app.use(express.static( './public'));
 app.use(require('express-session')({
     secret: 'toxic jobs',
-    resave: false,
+    resave: true,
     saveUninitialized: false,
     cookie: { secure: false }
 }));
 //config passport
 app.use(passport.initialize());
 app.use(passport.session());
-
-
 
 app.use('/api', api);
 app.use('/account', account);
