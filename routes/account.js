@@ -6,6 +6,13 @@ var express = require('express'),
     passport = require('passport'),
     Account = require('../models/account');
 
+router.delete('/:username', (req,res) =>{
+    Account.remove({username:req.params.username},(err,data)=>{
+        if(err)return res.status(500).send(err);
+        res.json(data);
+    })
+})
+
 router.post('/login',  passport.authenticate('local'),
     (req, res)=> {
         req.session.save((err)=>{
@@ -15,7 +22,9 @@ router.post('/login',  passport.authenticate('local'),
     });
 router.get('/logout', function(req, res){
     req.logout();
-    res.end();
+    req.session.save((err)=> {
+        res.end();
+    });
 });
 
 router.post('/',

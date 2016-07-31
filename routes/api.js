@@ -33,13 +33,14 @@ router.get('/company/:URID/comments', function(req, res) {
     });
 });
 
-
 router.post('/company', function(req, res) {
-    company.create(req.body, (err, data)=>{
-        if(err != null) res.status(500).send(err);
-        else
-            res.json(data);
-    } );
+    if(req.isAuthenticated()) {
+        company.create(req.body, (err, data)=> {
+            if (err != null) res.status(500).send(err);
+            else
+                res.json(data);
+        });
+    }else res.status(401).end();
 });
 
 router.post('/company/:URID/comment', function(req, res) {
@@ -55,9 +56,5 @@ router.post('/company/:URID/comment', function(req, res) {
         }
     } );
 });
-
-
-
-
 
 module.exports = router;
