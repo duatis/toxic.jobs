@@ -7,20 +7,20 @@ var express = require('express'),
     comment    = new (require('../controllers/commentController.js'));
 
 router.get('/companies', function(req, res) {
-    company.find().exec(function(err,data){
+    company.find().populate('_account').exec(function(err,data){
         res.json(data);
     });
 });
 
 router.get('/company/:URID', function(req, res) {
-    company.findOne({URID: req.params.URID},(err,data) =>{
+    company.findOne({URID: req.params.URID}).populate('_account').exec( (err,data) =>{
         if(err != null) res.status(500).end(err);
         res.json(data);
     });
 });
 
 router.get('/company/:URID/comments', function(req, res) {
-    company.findOne({URID: req.params.URID}, (err,data) =>{
+    company.findOne({URID: req.params.URID},(err,data) =>{
         if(err != null) res.status(500).end(err);
         else{
             comment.find({_company: data._id}).
@@ -35,6 +35,7 @@ router.get('/company/:URID/comments', function(req, res) {
 
 router.post('/company', function(req, res) {
     if(req.isAuthenticated()) {
+        req.body._account = req.session.passport.user;
         company.create(req.body, (err, data)=> {
             if (err != null) res.status(500).send(err);
             else

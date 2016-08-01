@@ -11,6 +11,7 @@ class Comment extends BaseModel
         var schema =
         {
             _company: { type: BaseModel.Schema.Types.ObjectId, ref: 'Company' },
+            _account: { type: BaseModel.Schema.Types.ObjectId, ref: 'Account' },
             text: String
         };
         super(schema);

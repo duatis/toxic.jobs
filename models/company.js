@@ -20,7 +20,8 @@ class Company extends BaseModel
             description: String,
             web: String,
             email:String,
-            URID: String //Id to accress through url
+            URID: String, //Id to accress through url
+            _account: { type: BaseModel.Schema.Types.ObjectId, ref: 'Account' }
         };
         super(schema);
        return this.model;

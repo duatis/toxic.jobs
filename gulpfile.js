@@ -2,7 +2,7 @@ var gulp = require('gulp');
 var mocha = require('gulp-mocha');
 var watching = false;
 
-gulp.task('default', function() {
+gulp.task('default', function() {  
 
     gulp.src('test/*.test.js').
     pipe(mocha()).on('error',onError);

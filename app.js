@@ -32,8 +32,15 @@ app.use('/account', account);
 app.use('/', index);
 
 passport.use(new LocalStrategy(Account.authenticate()));
-passport.serializeUser(Account.serializeUser());
-passport.deserializeUser(Account.deserializeUser());
+passport.serializeUser(function(user, done) {
+    done(null, user.id);
+});
+
+passport.deserializeUser(function(id, done) {
+    Account.findById(id, function (err, user) {
+        done(err, user);
+    });
+});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

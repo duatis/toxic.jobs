@@ -90,6 +90,7 @@ describe("API", function()
         req.
             send({name: faker.name.findName(), description: test_description}).
             end((err, res)=>{
+            console.log(res.body);
                 expect(res).to.be.json;
                 done();
         });
