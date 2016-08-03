@@ -99,6 +99,10 @@ class BaseController
     {
         this[model].update(query, data, {multi:false}, fn);
     }
+
+    get controllerModel() {
+        return this[model];
+    }
 }
 
 module.exports = BaseController;

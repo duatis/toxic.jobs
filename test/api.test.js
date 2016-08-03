@@ -29,27 +29,32 @@ describe("API", function()
             });
         });
 
-       var createCompany = ()=> {
-           req = request.post('/api/company');
-           req.cookies = cookies; //set cookies saved before
-           req.send({
-               name: "company for comments",
-               description: test_description
-           }).end((err, res)=> {
-               company_id = res.body._id;
-               company_URID = res.body.URID;
-               request.post('/api/company/' + res.body.URID + '/comment').send({text: comment_text}).
-               end((err, data) => {
-                   if (err != null)console.log(err);
-                   request.post('/api/company/' + res.body.URID + '/comment').send({text: comment_text}).end((err, data) => {
-                       if (err != null)console.log(err);
-                       done();
-                   });
+        var createCompany = ()=> {
+            req = request.post('/api/company');
+            req.cookies = cookies; //set cookies saved before
+            req.send({
+                name: "company for comments",
+                description: test_description
+            }).end((err, res)=> {
+                company_id = res.body._id;
+                company_URID = res.body.URID;
 
-               });
+                var req = request.post('/api/company/' + res.body.URID + '/comment');
+                req.cookies = cookies;
+                req.send({text: comment_text}).
+                end((err, data) => {
+                    if (err != null)console.log(err);
+                    var req = request.post('/api/company/' + res.body.URID + '/comment');
+                    req.cookies = cookies;
+                    req.send({text: comment_text}).end((err, data) => {
+                        if (err != null)console.log(err);
+                        done();
+                    });
 
-           });
-       }
+                });
+
+            });
+        }
     });
 
     it("should respond to get /companies", (done)=>{
@@ -88,11 +93,10 @@ describe("API", function()
         var req = request.post('/api/company');
         req.cookies = cookies;
         req.
-            send({name: faker.name.findName(), description: test_description}).
-            end((err, res)=>{
-            console.log(res.body);
-                expect(res).to.be.json;
-                done();
+        send({name: faker.name.findName(), description: test_description}).
+        end((err, res)=>{
+            expect(res).to.be.json;
+            done();
         });
     });
 
@@ -131,8 +135,10 @@ describe("API", function()
 
     it("post /commpany/:URID/comments should save new comment for the company", (done) =>{
         var _comment = {text: faker.lorem.paragraph()};
-        request.post('/api/company/' + company_URID + '/comment').
-        send(_comment).
+
+        var req = request.post('/api/company/' + company_URID + '/comment');
+        req.cookies = cookies;
+        req.send(_comment).
         end((err, res) =>{
             request.get('/api/company/' + company_URID + '/comments').
             end((err,res)=>{

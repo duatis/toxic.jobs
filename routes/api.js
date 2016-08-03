@@ -33,29 +33,35 @@ router.get('/company/:URID/comments', function(req, res) {
     });
 });
 
-router.post('/company', function(req, res) {
-    if(req.isAuthenticated()) {
-        req.body._account = req.session.passport.user;
-        company.create(req.body, (err, data)=> {
-            if (err != null) res.status(500).send(err);
-            else
-                res.json(data);
-        });
-    }else res.status(401).end();
+router.post('/company', checkAuthenticated, function(req, res) {
+    company.create(req.body, (err, data)=> {
+        if (err != null) res.status(500).send(err);
+        else
+            res.json(data);
+    });
 });
 
-router.post('/company/:URID/comment', function(req, res) {
-    company.findOne({URID: req.params.URID}, (err,data) =>{
-        if(err != null) res.status(500).send(err);
-        else {
-            req.body._company = data._id;
-            comment.create(req.body, (err, data)=>{
-                if(err != null) res.status(500).send(err);
-                else
-                    res.json(data);
-            } );
-        }
-    } );
+router.post('/company/:URID/comment',checkAuthenticated, function(req, res) {
+        company.findOne({URID: req.params.URID}, (err, data) => {
+            if (err != null) res.status(500).send(err);
+            else {
+                req.body._company = data._id;
+                comment.create(req.body, (err, data)=> {
+                    if (err != null) res.status(500).send(err);
+                    else
+                        res.json(data);
+                });
+            }
+        });
 });
+
+function checkAuthenticated( req, res, next )
+{
+    if(req.isAuthenticated()){
+        req.body._account = req.session.passport.user;
+        return next();
+    }
+    return res.status(401).end();
+}
 
 module.exports = router;

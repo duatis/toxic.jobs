@@ -4,7 +4,7 @@
  */
 var chai = require('chai');
 var expect = chai.expect;
-var Account = require('../models/account.js');
+var Account = require('../models/account');
 var faker = require('faker');
 
 var username = faker.name.findName();
