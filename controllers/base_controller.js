@@ -12,7 +12,7 @@ class BaseController
     constructor()
     {
         var modelName  = this.constructor.name.replace("Controller","");
-        this[model] = require("../models/"+modelName);
+        this.model = require("../models/"+modelName);
     }
 
     /**
@@ -22,7 +22,7 @@ class BaseController
      */
     all(fn)
     {
-       return this[model].find().exec(fn);
+       return this.model.find().exec(fn);
     }
 
     /**
@@ -31,10 +31,15 @@ class BaseController
      * @param fn {function(err,data)} callback
      * @returns {Promise}
      */
-    find(query, fn)
+    find(query,  options, fn)
     {
-        if(fn == undefined) return this[model].find(query);
-        return this[model].find(query).exec(fn);
+        var tmp = (typeof options == "function")?this.model.find(query): this.model.find(query,options);
+
+        if(fn) return tmp.exec(fn);
+
+        if(!options)return tmp;
+
+        if(typeof options == "function")tmp.exec(options);
     }
 
     /**
@@ -43,9 +48,10 @@ class BaseController
      * @param fn {function(err,data)}  callback
      * @returns {Promise}
      */
-    findOne(query, fn)
+    findOne(query, options, fn)
     {
-        return this[model].findOne(query).exec(fn);
+        return this.model.findOne(query, options, fn);
+
     }
 
     /**
@@ -67,7 +73,7 @@ class BaseController
      */
     count(query, fn)
     {
-        return this[model].find(query).count().exec(fn);
+        return this.model.find(query).count().exec(fn);
     }
 
     /**
@@ -77,7 +83,7 @@ class BaseController
      */
     create(data, fn)
     {
-        new (this[model](data)).save(fn);
+        new (this.model(data)).save(fn);
     }
 
     /**
@@ -87,21 +93,21 @@ class BaseController
      */
     remove(query, fn)
     {
-        this[model].remove(query,fn);
+        this.model.remove(query,fn);
     }
 
     modify(query, data, fn )
     {
-        this[model].update(query, data, {multi:true}, fn);
+        this.model.update(query, data, {multi:true}, fn);
     }
 
     modifyOne(query, data, fn )
     {
-        this[model].update(query, data, {multi:false}, fn);
+        this.model.update(query, data, {multi:false}, fn);
     }
 
     get controllerModel() {
-        return this[model];
+        return this.model;
     }
 }
 

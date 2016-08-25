@@ -10,7 +10,7 @@ var faker = require('faker');
 describe('Comment model', function() {
 
 
-    before(function() {
+    /*before(function() {
 
         Comment.remove({});
         Company.remove({}, ()=> {
@@ -19,7 +19,7 @@ describe('Comment model', function() {
                 description: "a simple company to perform comment test"
             }).save();
         });
-    });
+    });*/
 
     it('save comment should add new document to database', function(done) {
         var fake_text = faker.lorem.paragraph();
@@ -78,5 +78,7 @@ describe('Comment model', function() {
         );
 
     });
+    
+
 
 });

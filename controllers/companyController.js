@@ -36,7 +36,7 @@ class CompanyController extends BaseController
     create(data, fn)
     {
         var errors = CompanyController.validateData(data);
-        if (errors.length > 0) fn(errors, null); //if errors execute callback with generated errors
+        if (errors.length > 0)return fn(errors, null); //if errors execute callback with generated errors
         else
         {
             data.URID = data.name.slug();
@@ -55,6 +55,18 @@ class CompanyController extends BaseController
 
         }
 
+    }
+    
+    getAverageScore(id, fn)
+    {
+        var average = 0;
+        this.findOne({_id:id}, (err, data)=>{
+            if(err) return fn(err, null);
+            data.answers.forEach((item)=> {
+                average +=item.score;
+            });
+            fn(err,(average/data.answers.length));
+        });
     }
 }
 
