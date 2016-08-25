@@ -11,9 +11,22 @@ var doc = { name: faker.name.findName(), description:test_description };
 
 describe("Company controller", function()
 {
-    before(()=>{
-        wrk.remove({});
-    });
+
+
+    it("should create an save new document", (done) =>{
+            wrk.count({},(err, data) => {
+                var nRegs = data;
+                wrk.create(doc, (err,data) => {
+                    wrk.count({name: doc.name}, (err,data) =>{
+                        expect(data).to.equal(1);
+                        done();
+                    });
+
+                })
+            });
+        }
+    );
+
     it("should implement all controller's methods",
         function(done)
         {
@@ -29,7 +42,7 @@ describe("Company controller", function()
         }
     );
 
-    it("findOne should return one object", function(done){
+    it("findOne should return one object", (done)=>{
 
         wrk.findOne({name: {$ne:null}}, (err, data) =>{
             expect(data).to.be.an('Object');
@@ -55,20 +68,6 @@ describe("Company controller", function()
             }
         );
     });
-
-    it("should create an save new document", (done) =>{
-            wrk.count({},(err, data) => {
-                var nRegs = data;
-                wrk.create(doc, (err,data) => {
-                    wrk.count({name: doc.name}, (err,data) =>{
-                        expect(data).to.equal(1);
-                        done();
-                    });
-
-                })
-            });
-        }
-    );
 
     it("should remove documents from collection", (done) =>{
         wrk.count({},(err, data) => {
@@ -133,7 +132,7 @@ describe("Company controller", function()
         });
     });
 
-    it("company with too invalid email format should return error (code 1003)", (done) =>{
+    it("company with invalid email format should return error (code 1003)", (done) =>{
         wrk.create({name:"test company name",description: test_description, email:"duatis-gmail.com"}, (err,data) =>{
             expect(err[0].code).to.equal(1003);
             done();
@@ -142,10 +141,13 @@ describe("Company controller", function()
 
     it("create should save URID to access company", (done) =>{
         wrk.create({name:"URID test",description:test_description}, (err,data) =>{
-            expect(data.URID).to.equal(data.name.slug());
-            done();
+            wrk.remove(data.id, ()=>{
+                expect(data.URID).to.equal(data.name.slug());
+                done();
+            });
         });
     });
+
 
     it("shouldn't save companies with the same URID", (done) =>{
         wrk.create({name:doc.name,description:test_description}, (err) =>{
@@ -160,6 +162,45 @@ describe("Company controller", function()
                         done();
                     });
                 });
+            });
+        });
+    });
+
+    it("saves answers", (done)=>{
+        var questions = new (require('../controllers/questionController'))();
+        wrk.findOne({}, (err, _company)=>{
+            var nAnswersIni = _company.answers.length;
+            if(err) return expect(false).to.be.ok;
+            questions.find({}, (err, _questions) =>{
+                if(err)return expect(false).to.be.ok;
+                for(var index in _questions)
+                {
+                    let answer = {_question: _questions[index].id, _company: _company.id, score: Number(index)+1};
+                    _company.answers.push(answer);
+                }
+                wrk.save(_company,(err, data) =>
+                {
+                    expect(data.answers.length).to.equal( nAnswersIni + _questions.length);
+                    done();
+                });
+
+            })
+            
+        });
+    });
+
+    it("return average score of a company", (done) =>
+    {
+        wrk.findOne({},(err, data) =>{
+            if(err) return expect(false).to.be.ok;
+            var average = 0;
+            data.answers.forEach((item) => average += item.score);
+            average /=data.answers.length;
+            wrk.getAverageScore(data.id,(err, data)=>{
+
+                if(err) return expect(false).to.be.ok;
+                expect(data).to.equals(average);
+                done();
             });
         });
     });
