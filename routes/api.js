@@ -5,6 +5,7 @@ var express = require('express'),
     router = express(),
     company    = new (require('../controllers/companyController.js'));
     comment    = new (require('../controllers/commentController.js'));
+    question   = new (require('../controllers/questionController.js'));
 
 router.get('/companies', function(req, res) {
     company.find().populate('_account').exec(function(err,data){
@@ -54,6 +55,16 @@ router.post('/company/:URID/comment',checkAuthenticated, function(req, res) {
             }
         });
 });
+
+router.get('/questions', (req, res)=>{
+    question.find({}, (err, data)=>{
+        if (err != null) res.status(500).send(err);
+        else
+            res.json(data);
+    });
+});
+
+router.post('/company/:URID/scores',(req,res)=> res.end());
 
 function checkAuthenticated( req, res, next )
 {

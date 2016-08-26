@@ -155,4 +155,33 @@ describe("API", function()
         });
     });
 
+
+    it("should respond to get /questions", (done)=>{
+        request.get('/api/questions').
+        end((err,res)=>{
+            expect(res).to.not.have.status(404);
+            done();
+        });
+    } );
+
+
+    it("/questions return list of questions", (done) =>{
+        request.get('/api/questions').
+        end((err,res)=>{
+            expect(res.body).to.be.array;
+            expect(res.body[0].text).to.contain('Question');
+            done();
+        });
+    });
+
+    it("should respond to post  /company/:URID/scores", (done)=>{
+        request.post('/api/company/'+company_URID+'/scores').
+        end((err,res)=>{
+            expect(res).to.not.have.status(404);
+            done();
+        });
+    } );
+
+    it("post /company/:URID/scores saves scores to question for company");
+
 });

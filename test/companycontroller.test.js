@@ -11,8 +11,6 @@ var doc = { name: faker.name.findName(), description:test_description };
 
 describe("Company controller", function()
 {
-
-
     it("should create an save new document", (done) =>{
             wrk.count({},(err, data) => {
                 var nRegs = data;
@@ -147,8 +145,7 @@ describe("Company controller", function()
             });
         });
     });
-
-
+    
     it("shouldn't save companies with the same URID", (done) =>{
         wrk.create({name:doc.name,description:test_description}, (err) =>{
             if(err != null) expect(true).to.be.false;
